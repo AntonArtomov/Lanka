@@ -1,43 +1,51 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { Link, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import { Timeline } from './Timeline';
-import { epochs, narrators } from './data';
-import cover from './cover.png';
+import { epochs } from './data';
+import { HeroChain } from './HeroChain';
+import { BrandLink } from './BrandLink';
+const sections = [
+  { path: '/journey', title: 'Збирай ланцюг', caption: 'Досліджуй епохи історії українського мистецтва', color: 'var(--color-gold)' },
+  { path: '/artworks', title: 'Карбуй образи', caption: 'Відкривай щодня нові артефакти та шедеври', color: 'var(--color-sage)' },
+  { path: '/quiz', title: 'Гартуй пам’ять', caption: 'Проходь квізи для запам’ятовування вивченого матеріалу', color: 'var(--color-clay)' },
+];
 
 function Home() {
-  return <section className="home-grid">
-    <div>
-      <p className="label">Мандрівка крізь епохи</p>
-      <h1>Відкрий українське мистецтво</h1>
-      <p className="my-6 max-w-md">Від трипільської кераміки до сучасних інсталяцій. Обери свій шлях історією мистецтва.</p>
-      <Link className="button" to="/journey">До мандрівки <span aria-hidden="true">↗</span></Link>
-    </div>
-    <img className="cover" src={cover} alt="Фрагмент стилізованого живописного портрета" />
+  return <section className="brand-home">
+    <h1>Українське<br />мистецтво</h1>
+    <p className="brand-subtitle">Ланка за ланкою</p>
+    <p className="brand-intro">Відтворюй ланцюжок історії через ключові події й твори</p>
+    <HeroChain />
+    <ul className="brand-menu">
+      {sections.map(section => <li key={section.path}>
+        <Link to={section.path}>
+          <BrandLink style={{ color: section.color }} />
+          <span>
+            <strong>{section.title}</strong>
+            <span className="brand-caption">{section.caption}</span>
+          </span>
+          <span className="brand-arrow" aria-hidden="true">↗</span>
+        </Link>
+      </li>)}
+    </ul>
+  </section>;
+}
+
+function SectionPreview({ section }: { section: typeof sections[number] }) {
+  return <section>
+    <Link className="back" to="/">← Головна</Link>
+    <h1>{section.title}</h1>
+    <p className="my-4">{section.caption}</p>
+    <p>Розділ у підготовці.</p>
   </section>;
 }
 
 function Journey() {
-  const [narratorId, setNarratorId] = useState(() => sessionStorage.getItem('lanka-narrator') ?? '');
-  const narrator = narrators.find(item => item.id === narratorId);
   return <section>
     <Link className="back" to="/">← Головна</Link>
-    <h1>Мандрівка</h1>
-    <p className="my-4">Обери зупинку або почни маршрут із Трипілля.</p>
-    <Link className="button" to={`/epoch/${epochs[0].id}`}>Почати мандрівку →</Link>
+    <h1 className="mx-auto max-w-2xl">Збери ланки у єдиний ланцюг</h1>
     <Timeline />
-    <section className="panel mx-auto max-w-lg">
-      <h2>Обери характер гіда</h2>
-      <div className="my-4 flex flex-wrap gap-2" aria-label="Стиль гіда" role="group">
-        {narrators.map(item => <button type="button" className="chip" key={item.id}
-          aria-pressed={narratorId === item.id} onClick={() => {
-            sessionStorage.setItem('lanka-narrator', item.id);
-            setNarratorId(item.id);
-          }}>{item.title}</button>)}
-      </div>
-      <p aria-live="polite">{narrator?.sample ?? 'Обери стиль, щоб побачити приклад репліки.'}</p>
-      <p className="mt-2 text-sm opacity-75">Демо голосового супроводу · текстовий приклад</p>
-    </section>
   </section>;
 }
 
@@ -85,21 +93,24 @@ function MissingPage() {
 export function App() {
   const location = useLocation();
   const reduce = useReducedMotion();
+  const isHome = location.pathname === '/';
   useEffect(() => {
     window.scrollTo(0, 0);
     document.querySelector<HTMLElement>('main')?.focus({ preventScroll: true });
   }, [location.pathname]);
   return <>
-    <header className="shell flex items-center justify-between border-b border-ink/20 py-5">
-      <Link className="logo" to="/">Ланка<span aria-hidden="true">∞</span></Link>
-      <nav aria-label="Основна навігація"><Link className="back" to="/journey">Маршрут</Link></nav>
+    <header className={isHome ? "brand-header" : "shell brand-header-inner"}>
+      <Link className="brand-wordmark" to="/"><BrandLink />ЛАНКА</Link>
+      {!isHome && <nav aria-label="Основна навігація"><Link className="back" to="/journey">Маршрут</Link></nav>}
     </header>
-    <main className="shell py-9 sm:py-14" tabIndex={-1}>
+    <main className={isHome ? "brand-main" : "shell py-9 sm:py-14"} tabIndex={-1}>
       <motion.div key={location.pathname} initial={reduce ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }} transition={{ duration: reduce ? 0 : 0.24 }}>
         <Routes location={location}>
           <Route path="/" element={<Home />} />
           <Route path="/journey" element={<Journey />} />
+          {sections.slice(1).map(section => <Route key={section.path} path={section.path}
+            element={<SectionPreview section={section} />} />)}
           <Route path="/epoch/:id" element={<EpochPage />} />
           <Route path="*" element={<MissingPage />} />
         </Routes>
