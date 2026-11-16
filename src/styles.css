@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f6eedf;
+  --color-ink: #1e312b;
+  --color-gold: #f0b638;
+  --color-clay: #a6432e;
+}
+
+@layer base {
+  body { @apply bg-paper text-ink; }
+  h1, h2, .logo { font-family: Georgia, serif; }
+  h1 { font-size: clamp(2.45rem, 7vw, 5.8rem); line-height: .99; letter-spacing: -.055em; overflow-wrap: anywhere; }
+  h2 { @apply text-2xl; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--color-clay); outline-offset: 4px; }
+  main:focus { outline: none; }
+}
+
+@layer components {
+  .shell { width: min(100% - 32px, 1060px); margin-inline: auto; }
+  .logo { @apply text-3xl font-bold tracking-tight; }
+  .logo span { @apply ml-1 text-clay; }
+  .home-grid { @apply my-5 grid items-center gap-8 md:grid-cols-2; }
+  .cover, .epoch-art { @apply w-full rounded-t-full rounded-b-xl object-cover; aspect-ratio: 5 / 4; }
+  .label { @apply mb-3 text-xs font-bold tracking-widest uppercase; }
+  .back { @apply mb-4 inline-block text-sm underline underline-offset-4; }
+  header .back { @apply mb-0; }
+  .button { @apply inline-flex min-h-11 items-center gap-3 rounded-full bg-ink px-5 py-3 font-semibold text-paper hover:bg-clay; }
+  .timeline { @apply relative mx-auto my-7 w-full max-w-lg rounded-3xl bg-[#eae0ca]; }
+  .timeline svg { @apply absolute inset-0 h-full w-full; }
+  .stop { @apply absolute max-w-[76%]; transform: translate(-18px, -50%); }
+  .stop-right { transform: translate(calc(-100% + 18px), -50%); }
+  .stop a { @apply flex min-h-11 items-center gap-2 rounded-full bg-paper p-1 pr-3 text-left text-sm shadow-sm hover:bg-white; line-height: 1.12; }
+  .stop-right a { @apply flex-row-reverse pl-3 pr-1 text-right; }
+  .stop small { @apply mt-1 block text-xs; }
+  .stop-number { @apply grid size-9 shrink-0 place-items-center rounded-full bg-gold text-xs font-bold; }
+  .panel { @apply rounded-2xl border border-ink/20 bg-[#eee4d1] p-5; }
+  .chip { @apply min-h-11 cursor-pointer rounded-full border border-ink/40 px-3 py-2 text-sm aria-pressed:bg-gold; }
+}
+
