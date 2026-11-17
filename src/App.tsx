@@ -7,10 +7,12 @@ import { HeroChain } from './HeroChain';
 import { BrandLink } from './BrandLink';
 import { AvantIntro } from './AvantIntro';
 import { AvantReader } from './AvantReader';
+import { Scan } from './Scan';
 const sections = [
   { path: '/journey', title: 'Збирай ланцюг', caption: 'Досліджуй епохи історії українського мистецтва', color: 'var(--color-gold)' },
   { path: '/artworks', title: 'Карбуй образи', caption: 'Відкривай щодня нові артефакти та шедеври', color: 'var(--color-sage)' },
   { path: '/quiz', title: 'Гартуй пам’ять', caption: 'Проходь квізи для запам’ятовування вивченого матеріалу', color: 'var(--color-clay)' },
+  { path: '/scan', title: 'Впізнай картину', caption: 'Сфотографуй твір у музеї, і Ланка розпізнає його', color: 'var(--color-brand)' },
 ];
 
 function Home() {
@@ -117,8 +119,9 @@ export function App() {
         <Routes location={location}>
           <Route path="/" element={<Home />} />
           <Route path="/journey" element={<Journey />} />
-          {sections.slice(1).map(section => <Route key={section.path} path={section.path}
+          {sections.slice(1, 3).map(section => <Route key={section.path} path={section.path}
             element={<SectionPreview section={section} />} />)}
+          <Route path="/scan" element={<Scan />} />
           <Route path="/epoch/avant" element={<AvantIntro />} />
           <Route path="/epoch/avant/explore" element={<AvantReader />} />
           <Route path="/epoch/:id" element={<EpochPage />} />
