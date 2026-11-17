@@ -308,3 +308,26 @@
   0%, 100% { transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-40cqi); }
   40%, 60% { transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-25cqi); }
 }
+
+.scan { max-width: 42rem; margin-inline: auto; }
+.scan-lead { margin-block: 1rem 1.5rem; }
+.scan-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
+.scan-button, .scan-gallery { position: relative; cursor: pointer; }
+.scan-gallery { min-height: 2.75rem; display: inline-flex; align-items: center; text-decoration: underline; text-underline-offset: 4px; }
+.scan-button input, .scan-gallery input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.scan-button:focus-within, .scan-gallery:focus-within { outline: 3px solid var(--color-brand); outline-offset: 4px; }
+.scan [aria-disabled="true"] { opacity: .5; pointer-events: none; }
+.scan-status { margin-top: 1rem; font-size: .92rem; }
+.scan-result { margin-top: 1.5rem; }
+.scan-photo { max-height: 14rem; max-width: 100%; border-radius: .75rem; object-fit: contain; }
+.scan-verdict { margin-block: 1rem; font: 400 1.5rem/1.15 var(--font-heading); }
+.scan-card { display: grid; gap: 1rem; padding: 1rem; border: 1px solid var(--color-ink); border-radius: 1rem; background: var(--color-platinum); }
+.scan-card > img { width: 100%; max-height: 22rem; object-fit: contain; }
+.scan-card h2 { margin-bottom: .5rem; }
+.scan-credit { margin-top: .75rem; font-size: .85rem; opacity: .8; }
+.scan-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; margin-bottom: 1rem; }
+.scan-options button { display: grid; gap: .4rem; width: 100%; height: 100%; padding: .5rem; border: 1px solid var(--color-ink); border-radius: .75rem; text-align: left; font-size: .8rem; }
+.scan-options button[aria-pressed="true"] { background: var(--color-gold); }
+.scan-options img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: .4rem; }
+.scan-all { display: inline-block; margin-top: 2rem; text-decoration: underline; text-underline-offset: 4px; }
+@media (min-width: 640px) { .scan-card { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); } }
