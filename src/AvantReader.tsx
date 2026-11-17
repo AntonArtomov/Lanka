@@ -1,13 +1,18 @@
 import { useEffect, useRef, useState, type MouseEvent, type PointerEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { BrandLink } from './BrandLink';
-import content from './data/avant-slides.json';
+import slideData from './data/avant-slides.json';
 const images = import.meta.glob<string>('./artworks/*', { eager: true, query: '?url', import: 'default' });
-const slideCount = content.artworks.length + 1;
+type ArtworkSlide = { type: 'artwork'; title: string; image: string; credit: string[] };
+type TextSlide = { type: 'text'; title: string; paragraphs: string[] };
+
+const slides = slideData as (ArtworkSlide | TextSlide)[];
+const slideCount = slides.length;
+const thumbnails = slides.filter((slide): slide is ArtworkSlide => slide.type === 'artwork')
+  .filter((_, index) => index % 2 === 0);
 
 function QuizInvitation({ goBack }: { goBack: () => void }) {
   const heading = useRef<HTMLHeadingElement>(null);
-  const thumbnails = content.artworks.filter((_, index) => index % 2 === 0);
 
   useEffect(() => { heading.current?.focus({ preventScroll: true }); }, []);
 
@@ -34,7 +39,7 @@ export function AvantReader() {
   const [page, setPage] = useState(0);
   const gesture = useRef<{ x: number; y: number } | null>(null);
   const dragged = useRef(false);
-  const artwork = content.artworks[page - 1];
+  const slide = slides[page];
 
   useEffect(() => { window.scrollTo(0, 0); }, [page]);
 
@@ -78,18 +83,18 @@ export function AvantReader() {
     }
   }}>
     <h1>Ранній модернізм і український авангард</h1>
-    <section key={page} className="avant-slide" aria-label={artwork?.title ?? content.intro.title}
+    <section key={page} className="avant-slide" aria-label={slide.title}
       onClick={onContentClick} onPointerDown={onPointerDown} onPointerUp={onPointerUp}
       onPointerCancel={() => { gesture.current = null; dragged.current = true; }}>
-      {artwork ? <figure className="avant-study">
-        <img src={images[`./artworks/${artwork.image}`]} alt={artwork.title} />
+      {slide.type === "artwork" ? <figure className="avant-study">
+        <img src={images[`./artworks/${slide.image}`]} alt={slide.title} />
         <figcaption>
-          <strong>{artwork.title}</strong>
-          {artwork.credit.map(line => <span className="block" key={line}>{line}</span>)}
+          <strong>{slide.title}</strong>
+          {slide.credit.map(line => <span className="block" key={line}>{line}</span>)}
         </figcaption>
       </figure> : <>
-        <h2>{content.intro.title}</h2>
-        {content.intro.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+        <h2>{slide.title}</h2>
+        {slide.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
       </>}
     </section>
     <nav className="avant-pagination" aria-label="Гортання слайдів">
