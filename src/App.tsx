@@ -5,6 +5,8 @@ import { Timeline } from './Timeline';
 import { epochs } from './data';
 import { HeroChain } from './HeroChain';
 import { BrandLink } from './BrandLink';
+import { AvantIntro } from './AvantIntro';
+import { AvantReader } from './AvantReader';
 const sections = [
   { path: '/journey', title: 'Збирай ланцюг', caption: 'Досліджуй епохи історії українського мистецтва', color: 'var(--color-gold)' },
   { path: '/artworks', title: 'Карбуй образи', caption: 'Відкривай щодня нові артефакти та шедеври', color: 'var(--color-sage)' },
@@ -94,16 +96,22 @@ export function App() {
   const location = useLocation();
   const reduce = useReducedMotion();
   const isHome = location.pathname === '/';
+  const isAvantIntro = location.pathname === '/epoch/avant';
+  const isAvantReader = location.pathname === '/epoch/avant/explore';
   useEffect(() => {
     window.scrollTo(0, 0);
     document.querySelector<HTMLElement>('main')?.focus({ preventScroll: true });
   }, [location.pathname]);
   return <>
     <header className={isHome ? "brand-header" : "shell brand-header-inner"}>
-      <Link className="brand-wordmark" to="/"><BrandLink />ЛАНКА</Link>
-      {!isHome && <nav aria-label="Основна навігація"><Link className="back" to="/journey">Маршрут</Link></nav>}
+      <div className="flex items-center gap-4">
+        {isAvantReader && <Link className="avant-back" to="/epoch/avant" aria-label="До вступу">←</Link>}
+        {isAvantIntro && <Link className="avant-back" to="/journey" aria-label="До карти епох">←</Link>}
+        <Link className="brand-wordmark" to="/"><BrandLink />ЛАНКА</Link>
+      </div>
+      {!isHome && !isAvantIntro && !isAvantReader && <nav aria-label="Основна навігація"><Link className="back" to="/journey">Маршрут</Link></nav>}
     </header>
-    <main className={isHome ? "brand-main" : "shell py-9 sm:py-14"} tabIndex={-1}>
+    <main className={isHome ? "brand-main" : isAvantReader ? "shell" : "shell py-9 sm:py-14"} tabIndex={-1}>
       <motion.div key={location.pathname} initial={reduce ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }} transition={{ duration: reduce ? 0 : 0.24 }}>
         <Routes location={location}>
@@ -111,6 +119,8 @@ export function App() {
           <Route path="/journey" element={<Journey />} />
           {sections.slice(1).map(section => <Route key={section.path} path={section.path}
             element={<SectionPreview section={section} />} />)}
+          <Route path="/epoch/avant" element={<AvantIntro />} />
+          <Route path="/epoch/avant/explore" element={<AvantReader />} />
           <Route path="/epoch/:id" element={<EpochPage />} />
           <Route path="*" element={<MissingPage />} />
         </Routes>

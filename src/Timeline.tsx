@@ -1,8 +1,9 @@
-import { useId, useState, type PointerEvent } from 'react';
+import { useEffect, useId, useState, type PointerEvent } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { linkOutline } from './linkOutline';
 import chain from './data/chain.json';
+import { AvantIntro } from './AvantIntro';
 
 const completedColors = ['sage', 'brand', 'gold', 'clay', 'ink', 'sage'];
 const spring = { type: 'spring', stiffness: 190, damping: 18 } as const;
@@ -38,6 +39,16 @@ function CompletedChain() {
 export function Timeline() {
   const reduced = useReducedMotion();
   const [lean, setLean] = useState(0);
+  const [showPreview, setShowPreview] = useState(false);
+
+  useEffect(() => {
+    if (!showPreview) return;
+    function dismiss(event: KeyboardEvent) {
+      if (event.key === 'Escape') setShowPreview(false);
+    }
+    window.addEventListener('keydown', dismiss);
+    return () => window.removeEventListener('keydown', dismiss);
+  }, [showPreview]);
   const [focused, setFocused] = useState(false);
 
   function followPointer(event: PointerEvent<HTMLAnchorElement>) {
@@ -71,11 +82,18 @@ export function Timeline() {
       </span>;
       return <li key={number} className={completed ? 'journey-chain-complete' : undefined}>
         {number === 1 && <CompletedChain />}
-        {active ? <Link to="/epoch/avant" className="journey-chain-row journey-chain-next"
-          onPointerMove={followPointer} onPointerLeave={() => setLean(0)}
-          onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}>
-          {ring}{label}
-        </Link> : <div className="journey-chain-row">{ring}{label}</div>}
+        {active ? <div className="journey-preview-anchor"
+          onPointerEnter={event => {
+            if (event.pointerType === 'mouse' && window.matchMedia('(any-hover: hover)').matches) setShowPreview(true);
+          }}
+          onPointerLeave={() => { setLean(0); setShowPreview(false); }}>
+          <Link to="/epoch/avant" className="journey-chain-row journey-chain-next"
+            onPointerMove={followPointer}
+            onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}>
+            {ring}{label}
+          </Link>
+          {showPreview && <div className="journey-preview"><AvantIntro preview /></div>}
+        </div> : <div className="journey-chain-row">{ring}{label}</div>}
       </li>;
     })}
   </ol>;
