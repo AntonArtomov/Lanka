@@ -1,0 +1,16 @@
+[
+  { "image": "trypillia-vessel.jpg", "title": "Посудина з розписом", "credit": ["Середина IV тис. до н. е.", "Трипільська культура", "Розкопки В. Хвойки", "Національний музей історії України"], "epochNumber": 1 },
+  { "image": "trypillia-mask.jpg", "title": "Трипільський артефакт", "credit": ["Трипільська культура", "Cucuteni_Tripolie"], "epochNumber": 1 },
+  { "image": "sofia.jpg", "title": "Княжий портрет", "credit": ["Фрагмент фрески", "Софія Київська"], "epochNumber": 2 },
+  { "image": "christ.jpg", "title": "Спас у славі", "credit": ["Ікона"], "epochNumber": 3 },
+  { "image": "nativity.jpg", "title": "Різдво Марії", "credit": ["Микола Петрахнович-Мороховський", "З іконостаса Успенської церкви у Львові"], "epochNumber": 4 },
+  { "image": "khotyn.jpg", "title": "Смерть Яна Кароля Ходкевича в таборі під Хотином", "credit": ["Франциск Смуглевич"], "epochNumber": 5 },
+  { "image": "easter.webp", "title": "Ранок Христового Воскресіння", "credit": ["Микола Пимоненко"], "epochNumber": 6 },
+  { "image": "tram.jpg", "title": "Трамвай", "credit": ["Олександр Богомазов", "1914"], "epochNumber": 7 },
+  { "image": "harvest-festival.jpg", "title": "Свято врожаю", "credit": ["Михайло Бойчук", "Фреска Червонозаводського театру", "Харків"], "epochNumber": 8 },
+  { "image": "raiko.jpg", "title": "Настінні розписи власного будинку", "credit": ["Поліна Райко", "Олешки"], "epochNumber": 9 },
+  { "image": "boriviter.jpg", "title": "Боривітер", "credit": ["Алла Горська, Віктор Зарецький, Галина Зубченко, Григорій Пришедько, Борис Плаксій", "Маріуполь"], "epochNumber": 10 },
+  { "image": "roitburd.jpg", "title": "Автопортрет", "credit": ["Олександр Ройтбурд"], "epochNumber": 11 },
+  { "image": "makov.png", "title": "Запрошення", "credit": ["Павло Маков"], "epochNumber": 12 },
+  { "image": "palianytsia.webp", "title": "Паляниця", "credit": ["Жанна Кадирова та Денис Рубан"], "epochNumber": 13 }
+]

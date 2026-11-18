@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { artworkEpoch, artworkOf, descriptionOf, imageUrl } from './artworkCatalog';
+import { epochOf, artworkOf, descriptionOf, imageUrl } from './artworkCatalog';
 import { loadModel, recognize, type Result } from './scan/recognize';
 
 type State =
@@ -57,6 +57,7 @@ export function Scan() {
   const foundImage = state.step === 'done'
     ? state.result.verdict === 'match' ? state.result.matches[0]?.image : picked
     : null;
+  const foundEpoch = foundImage ? epochOf(foundImage) : undefined;
   const busy = state.step === 'working';
   const loadingModel = progress !== null;
   return <section className="scan">
@@ -112,8 +113,8 @@ export function Scan() {
     </div>}
 
     {foundImage && artworkOf(foundImage) && <div className="scan-result-actions">
-      <Link className="scan-all" to={artworkEpoch.route}>
-        Переглянути всі твори епохи: {artworkEpoch.title} →
+      <Link className="scan-all" to={foundEpoch?.route ?? '/journey'}>
+        {foundEpoch?.hasGallery ? 'Переглянути всі твори епохи' : 'До епохи на карті'}: {foundEpoch?.title} →
       </Link>
     </div>}
   </section>;

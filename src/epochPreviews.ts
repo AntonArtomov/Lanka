@@ -1,16 +1,16 @@
-import trypillia from './epoch-previews/trypillia-vessel.jpg';
-import sofia from './epoch-previews/sofia.jpg';
-import christ from './epoch-previews/christ.jpg';
-import nativity from './epoch-previews/nativity.jpg';
-import khotyn from './epoch-previews/khotyn.jpg';
-import easter from './epoch-previews/easter.webp';
-import harvest from './epoch-previews/harvest.jpg';
-import boriviter from './epoch-previews/boriviter.jpg';
-import roitburd from './epoch-previews/roitburd.jpg';
-import makov from './epoch-previews/makov.png';
-import palianytsia from './epoch-previews/palianytsia.webp';
-import raiko from './epoch-previews/raiko.jpg';
-import tram from './epoch-previews/tram.jpg';
+import trypillia from './artworks/trypillia-vessel.jpg';
+import sofia from './artworks/sofia.jpg';
+import christ from './artworks/christ.jpg';
+import nativity from './artworks/nativity.jpg';
+import khotyn from './artworks/khotyn.jpg';
+import easter from './artworks/easter.webp';
+import harvest from './artworks/harvest-festival.jpg';
+import boriviter from './artworks/boriviter.jpg';
+import roitburd from './artworks/roitburd.jpg';
+import makov from './artworks/makov.png';
+import palianytsia from './artworks/palianytsia.webp';
+import raiko from './artworks/raiko.jpg';
+import tram from './artworks/tram.jpg';
 
 export const epochPreviews: Partial<Record<number, { image?: string; caption: string; source?: { label: string; url: string } }>> = {
   1: { image: trypillia, caption: 'Посудина з розписом. Середина IV тис. до н. е. Трипільська культура. Розкопки В. Хвойки. Національний музей історії України' },

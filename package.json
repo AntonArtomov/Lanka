@@ -7,6 +7,8 @@
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
+    "prebuild": "node scripts/check-artwork-index.mjs",
+    "embeddings:check": "node scripts/check-artwork-index.mjs",
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",

@@ -3,6 +3,7 @@
 // Для кожної картини додаються спотворені варіанти, що імітують фото з музею:
 // кропи, нахил, перспектива, відблиск, слабке світло, низька якість.
 import { readdirSync, writeFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { pipeline } from '@huggingface/transformers';
 import sharp from 'sharp';
 import { MODEL_DTYPE, MODEL_ID, pool } from '../src/scan/vector.ts';
@@ -32,11 +33,11 @@ const variants: Variant[] = [
 ];
 
 const extractor = await pipeline('image-feature-extraction', MODEL_ID, { dtype: MODEL_DTYPE });
-const files = readdirSync(dir).filter(f => /\.(jpe?g|png)$/i.test(f)).sort();
+const files = readdirSync(dir).filter(f => /\.(jpe?g|png|webp)$/i.test(f)).sort();
 const entries: { image: string; variant: string; vector: number[] }[] = [];
 
 for (const file of files) {
-  const src = sharp(new URL(file, dir).pathname);
+  const src = sharp(fileURLToPath(new URL(file, dir)));
   const { width = 0, height = 0 } = await src.metadata();
   for (const v of variants) {
     const buf = await v.make(src.clone(), width, height).jpeg().toBuffer();
