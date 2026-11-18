@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type MouseEvent, type PointerEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { BrandLink } from './BrandLink';
+import { FlyingReward } from './FlyingReward';
+import { descriptionOf } from './artworkCatalog';
 import slideData from './data/avant-slides.json';
 const images = import.meta.glob<string>('./artworks/*', { eager: true, query: '?url', import: 'default' });
 type ArtworkSlide = { type: 'artwork'; title: string; image: string; credit: string[] };
@@ -29,13 +31,13 @@ function QuizInvitation({ goBack }: { goBack: () => void }) {
       </div>
       <h1 ref={heading} tabIndex={-1}>Що запам’яталося?</h1>
       <p>Пригадай твори й митців українського авангарду.</p>
-      <Link className="avant-explore" to="/quiz">Пройти квіз <span aria-hidden="true">→</span></Link>
+      <Link className="avant-explore" to="/quiz/avant">Пройти квіз <span aria-hidden="true">→</span></Link>
     </div>
     <Link className="button avant-finale-home" to="/">На головну</Link>
   </article>;
 }
 
-export function AvantReader() {
+export function AvantReader({ onReward }: { onReward: () => void }) {
   const [page, setPage] = useState(0);
   const gesture = useRef<{ x: number; y: number } | null>(null);
   const dragged = useRef(false);
@@ -86,11 +88,13 @@ export function AvantReader() {
     <section key={page} className="avant-slide" aria-label={slide.title}
       onClick={onContentClick} onPointerDown={onPointerDown} onPointerUp={onPointerUp}
       onPointerCancel={() => { gesture.current = null; dragged.current = true; }}>
+      {page === 16 && <FlyingReward place="reader" onReward={onReward} />}
       {slide.type === "artwork" ? <figure className="avant-study">
         <img src={images[`./artworks/${slide.image}`]} alt={slide.title} />
         <figcaption>
           <strong>{slide.title}</strong>
           {slide.credit.map(line => <span className="block" key={line}>{line}</span>)}
+          <p className="avant-artwork-description">{descriptionOf[slide.image]}</p>
         </figcaption>
       </figure> : <>
         <h2>{slide.title}</h2>
@@ -98,7 +102,12 @@ export function AvantReader() {
       </>}
     </section>
     <nav className="avant-pagination" aria-label="Гортання слайдів">
-      <progress max={slideCount} value={page + 1} aria-label="Прогрес епохи" />
+      <div className="reader-link-progress" role="progressbar" aria-label="Прогрес епохи"
+        aria-valuemin={0} aria-valuemax={slideCount} aria-valuenow={page + 1}>
+        {slides.map((item, index) => <span key={item.title} className={index <= page ? 'is-read' : undefined}>
+          <BrandLink />
+        </span>)}
+      </div>
       <div>
         <button type="button" disabled={page === 0} onClick={() => turn(-1)} aria-label="Попередній слайд">‹</button>
         <output aria-live="polite">{String(page + 1).padStart(2, '0')} / {slideCount}</output>

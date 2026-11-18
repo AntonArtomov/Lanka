@@ -1,13 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import content from './data/avant-slides.json';
-import descriptions from './data/artwork-descriptions.json';
+import { artworkEpoch, artworkOf, descriptionOf, imageUrl } from './artworkCatalog';
 import { loadModel, recognize, type Result } from './scan/recognize';
-
-const images = import.meta.glob<string>('./artworks/*', { eager: true, query: '?url', import: 'default' });
-const descriptionOf: Record<string, string> = descriptions;
-const artworkOf = (image: string) => content.artworks.find(artwork => artwork.image === image)!;
-const imageUrl = (image: string) => images[`./artworks/${image}`];
 
 type State =
   | { step: 'idle' }
@@ -17,6 +11,7 @@ type State =
 
 function ArtworkCard({ image }: { image: string }) {
   const artwork = artworkOf(image);
+  if (!artwork?.credit) return null;
   return <article className="scan-card">
     <img src={imageUrl(image)} alt={artwork.title} />
     <div>
@@ -53,12 +48,15 @@ export function Scan() {
     }
   }
 
+  const foundImage = state.step === 'done'
+    ? state.result.verdict === 'match' ? state.result.matches[0]?.image : picked
+    : null;
   const busy = state.step === 'working';
   const loadingModel = progress !== null;
   return <section className="scan">
     <Link className="back" to="/">← Головна</Link>
     <h1>Впізнай картину</h1>
-    <p className="scan-lead">Сфотографуй твір у музеї, і Ланка підкаже, що це за картина.</p>
+    <p className="scan-lead">Сфотографуй картину в музеї і Ланка-Гід розповість тобі більше</p>
 
     <div className="scan-actions">
       <label className="button scan-button" aria-disabled={busy}>
@@ -96,7 +94,7 @@ export function Scan() {
             <button type="button" aria-pressed={picked === match.image}
               onClick={() => setPicked(match.image)}>
               <img src={imageUrl(match.image)} alt="" />
-              <span>{artworkOf(match.image).title}</span>
+              <span>{artworkOf(match.image)?.title ?? match.image}</span>
             </button>
           </li>)}
         </ul>
@@ -107,6 +105,13 @@ export function Scan() {
       </p>}
     </div>}
 
-    <Link className="scan-all" to="/epoch/avant/explore">Переглянути всі твори авангарду →</Link>
+    {foundImage && artworkOf(foundImage) && <div className="scan-result-actions">
+      <Link className="scan-all" to={artworkEpoch.route}>
+        Переглянути всі твори епохи: {artworkEpoch.title} →
+      </Link>
+      <Link className="button guide-primary" to={`/guide?work=${encodeURIComponent(foundImage)}`}>
+        Хочу дізнатись більше від Ланка-Гіду
+      </Link>
+    </div>}
   </section>;
 }

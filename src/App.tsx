@@ -1,13 +1,18 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
-import { Link, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import { Link, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Timeline } from './Timeline';
 import { epochs } from './data';
 import { HeroChain } from './HeroChain';
 import { BrandLink } from './BrandLink';
 import { AvantIntro } from './AvantIntro';
 import { AvantReader } from './AvantReader';
+import { AvantQuiz, QuizHub } from './AvantQuiz';
 import { Scan } from './Scan';
+import { ArtworkGuide } from './ArtworkGuide';
+import { clearRewards, getRewardCount } from './rewards';
+import { RewardLeaderboard } from './RewardLeaderboard';
+import { ProfileBadge, Welcome, readProfile, saveProfile, type DemoProfile } from './DemoProfile';
 const sections = [
   { path: '/journey', title: 'Збирай ланцюг', caption: 'Досліджуй епохи історії українського мистецтва', color: 'var(--color-gold)' },
   { path: '/artworks', title: 'Карбуй образи', caption: 'Відкривай щодня нові артефакти та шедеври', color: 'var(--color-sage)' },
@@ -15,12 +20,12 @@ const sections = [
   { path: '/scan', title: 'Впізнай картину', caption: 'Сфотографуй твір у музеї, і Ланка розпізнає його', color: 'var(--color-brand)' },
 ];
 
-function Home() {
+function Home({ onReward }: { onReward: () => void }) {
   return <section className="brand-home">
     <h1>Українське<br />мистецтво</h1>
     <p className="brand-subtitle">Ланка за ланкою</p>
     <p className="brand-intro">Відтворюй ланцюжок історії через ключові події й твори</p>
-    <HeroChain />
+    <HeroChain onReward={onReward} />
     <ul className="brand-menu">
       {sections.map(section => <li key={section.path}>
         <Link to={section.path}>
@@ -96,6 +101,11 @@ function MissingPage() {
 
 export function App() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [resetVersion, setResetVersion] = useState(0);
+  const [rewardCount, setRewardCount] = useState(getRewardCount);
+  const [profile, setProfile] = useState(readProfile);
+  const hasProfile = Boolean(profile);
   const reduce = useReducedMotion();
   const isHome = location.pathname === '/';
   const isAvantIntro = location.pathname === '/epoch/avant';
@@ -103,31 +113,53 @@ export function App() {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.querySelector<HTMLElement>('main')?.focus({ preventScroll: true });
-  }, [location.pathname]);
+  }, [location.pathname, hasProfile]);
+
+  function continueWith(profile: DemoProfile) {
+    saveProfile(profile);
+    setProfile(profile);
+  }
+  function refreshRewards() {
+    setRewardCount(getRewardCount());
+  }
+
+  function resetDemo() {
+    clearRewards();
+    refreshRewards();
+    if (location.state?.celebrateAvant) navigate(location.pathname, { replace: true, state: null });
+    setResetVersion(version => version + 1);
+  }
+
   return <>
-    <header className={isHome ? "brand-header" : "shell brand-header-inner"}>
+    <header className={isHome || !profile ? "brand-header" : "shell brand-header-inner"}>
       <div className="flex items-center gap-4">
-        {isAvantReader && <Link className="avant-back" to="/epoch/avant" aria-label="До вступу">←</Link>}
-        {isAvantIntro && <Link className="avant-back" to="/journey" aria-label="До карти епох">←</Link>}
+        {profile && isAvantReader && <Link className="avant-back" to="/epoch/avant" aria-label="До вступу">←</Link>}
+        {profile && isAvantIntro && <Link className="avant-back" to="/journey" aria-label="До карти епох">←</Link>}
         <Link className="brand-wordmark" to="/"><BrandLink />ЛАНКА</Link>
       </div>
-      {!isHome && !isAvantIntro && !isAvantReader && <nav aria-label="Основна навігація"><Link className="back" to="/journey">Маршрут</Link></nav>}
+      {profile && <div className="brand-header-actions">
+        <RewardLeaderboard nickname={profile.nickname} score={rewardCount} />
+        <ProfileBadge profile={profile} onSave={continueWith} onReset={resetDemo} />
+      </div>}
     </header>
-    <main className={isHome ? "brand-main" : isAvantReader ? "shell" : "shell py-9 sm:py-14"} tabIndex={-1}>
-      <motion.div key={location.pathname} initial={reduce ? false : { opacity: 0, y: 8 }}
+    <main className={!profile || isHome ? "brand-main" : isAvantReader ? "shell" : "shell py-9 sm:py-14"} tabIndex={-1}>
+      {!profile ? <Welcome onContinue={continueWith} /> : <motion.div key={`${location.pathname}:${resetVersion}`} initial={reduce ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }} transition={{ duration: reduce ? 0 : 0.24 }}>
         <Routes location={location}>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home onReward={refreshRewards} />} />
           <Route path="/journey" element={<Journey />} />
-          {sections.slice(1, 3).map(section => <Route key={section.path} path={section.path}
+          {sections.slice(1, 2).map(section => <Route key={section.path} path={section.path}
             element={<SectionPreview section={section} />} />)}
+          <Route path="/quiz" element={<QuizHub />} />
+          <Route path="/quiz/avant" element={<AvantQuiz onReward={refreshRewards} />} />
           <Route path="/scan" element={<Scan />} />
+          <Route path="/guide" element={<ArtworkGuide />} />
           <Route path="/epoch/avant" element={<AvantIntro />} />
-          <Route path="/epoch/avant/explore" element={<AvantReader />} />
+          <Route path="/epoch/avant/explore" element={<AvantReader onReward={refreshRewards} />} />
           <Route path="/epoch/:id" element={<EpochPage />} />
           <Route path="*" element={<MissingPage />} />
         </Routes>
-      </motion.div>
+      </motion.div>}
     </main>
   </>;
 }

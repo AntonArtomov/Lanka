@@ -2,6 +2,8 @@ import { useId, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { linkOutline } from './linkOutline';
 
+import { heroJoinedKey } from './rewards';
+
 const fixedLinks = [
   { x: 257, y: 201, angle: 19.5, color: 'var(--color-sage)' },
   { x: 411, y: 184, angle: -19.5, color: 'var(--color-brand)' },
@@ -15,9 +17,9 @@ function LinkStroke({ color }: { color: string }) {
   </>;
 }
 
-export function HeroChain() {
+export function HeroChain({ onReward }: { onReward: () => void }) {
   const id = useId();
-  const [joined, setJoined] = useState(() => localStorage.getItem('lanka-hero-joined') === 'true');
+  const [joined, setJoined] = useState(() => localStorage.getItem(heroJoinedKey) === 'true');
   const touchStart = useRef<{ x: number; y: number } | null>(null);
   const swiped = useRef(false);
   const [touchPreview, setTouchPreview] = useState(false);
@@ -38,7 +40,8 @@ export function HeroChain() {
       onClick={event => {
         if (joined || (event.detail > 0 && swiped.current)) return;
         setJoined(true);
-        localStorage.setItem('lanka-hero-joined', 'true');
+        localStorage.setItem(heroJoinedKey, 'true');
+        onReward();
       }}
       onPointerEnter={event => { if (event.pointerType === 'mouse') setNearby(true); }}
       onPointerLeave={() => setNearby(false)}
