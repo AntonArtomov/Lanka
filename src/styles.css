@@ -111,6 +111,25 @@
 .brand-caption { display: block; max-width: 31ch; margin-top: .35em; }
 .brand-arrow { justify-self: end; line-height: 1; }
 .brand-menu a:hover strong, .brand-menu a:focus-visible strong { color: var(--color-brand); }
+.home-art-scan {
+  display: grid;
+  grid-template-columns: clamp(64px, 15vw, 112px) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(.65rem, 2.5vw, 1.5rem);
+  margin-top: clamp(2rem, 6vw, 4rem);
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 1px solid color-mix(in srgb, var(--color-brand) 30%, transparent);
+  border-radius: 1.5rem;
+  background: color-mix(in srgb, var(--color-brand) 5%, var(--color-paper));
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--color-brand) 12%, transparent);
+  transition: background .2s, box-shadow .2s;
+}
+.home-art-scan strong { display: block; color: var(--color-brand); font: 400 clamp(1rem, 3.5vw, 2rem)/1.25 var(--font-heading); text-transform: uppercase; overflow-wrap: anywhere; }
+.home-art-scan .brand-caption { max-width: 36ch; }
+.home-art-scan .brand-arrow { color: var(--color-brand); }
+.art-scan-icon { display: block; width: 100%; height: auto; }
+.home-art-scan:hover { background: color-mix(in srgb, var(--color-gold) 14%, var(--color-paper)); box-shadow: 0 6px 0 color-mix(in srgb, var(--color-gold) 40%, transparent); }
+.home-art-scan:focus-visible { outline: 3px solid var(--color-brand); outline-offset: 5px; }
 
 .journey-chain { position: relative; max-width: 42rem; margin: 2rem auto 0; }
 .journey-chain-row {
@@ -138,7 +157,6 @@
 }
 .journey-chain-status { align-self: end; font-size: .75rem; }
 .journey-chain-next { margin-block: 1rem; color: var(--color-brand); }
-.journey-chain-action { align-self: start; font-size: .875rem; text-decoration: underline; text-underline-offset: .22em; }
 
 .journey-chain-art {
   position: absolute;
@@ -219,9 +237,12 @@
 .avant-slide p, .avant-slide li { font-size: clamp(1.08rem, 4vw, 1.32rem); line-height: 1.35; margin-bottom: .7rem; }
 .avant-slide ol { list-style: decimal; padding-inline-start: 1.35rem; }
 .avant-slide a { color: var(--color-brand); text-decoration: underline; overflow-wrap: anywhere; }
-.avant-study img { display: block; width: auto; height: auto; max-height: min(54svh, 30rem); max-width: 100%; object-fit: contain; margin-inline: auto; }
-.avant-study figcaption { margin-top: .6rem; line-height: 1.3; }
-.avant-study .avant-artwork-description { margin-block: .85rem 0; }
+.avant-study { width: fit-content; max-width: 100%; margin-inline: auto; }
+.avant-study img { display: block; width: auto; height: auto; max-height: min(54svh, 30rem); max-width: 100%; object-fit: contain; }
+.avant-study figcaption { width: 0; min-width: 100%; margin-top: .6rem; line-height: 1.3; text-align: center; overflow-wrap: anywhere; }
+.avant-cover-caption { text-align: center; }
+.reader-quote { margin-block: 1.5rem 0; padding: 1rem; border-radius: 0 .75rem .75rem 0; background: color-mix(in srgb, var(--color-gold) 10%, transparent); }
+.reader-quote footer { font-size: .95rem; line-height: 1.4; }
 .avant-pagination {
   position: sticky;
   bottom: 0;
@@ -311,6 +332,7 @@
 }
 
 .scan { max-width: 42rem; margin-inline: auto; }
+.scan h1 { font-size: clamp(1.96rem, 5.6vw, 4.64rem); }
 .scan-lead { margin-block: 1rem 1.5rem; }
 .scan-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
 .scan-button, .scan-gallery { position: relative; cursor: pointer; }
@@ -447,6 +469,7 @@
 .guide-artwork img { width: 3.5rem; height: 3.5rem; flex: none; object-fit: cover; border-radius: .45rem; }
 .guide-artwork h2 { font-size: clamp(1rem, 4vw, 1.45rem); }
 .guide-artwork p { margin-top: .2rem; }
+.guide-artwork-description { margin-block: 1rem; line-height: 1.5; }
 .guide-chat {
   display: grid; gap: .85rem; padding: clamp(.75rem, 3vw, 1.25rem);
   border: 1px solid #292a2d26; border-radius: 1rem; background: #fffcf680;
@@ -492,7 +515,7 @@
 }
 .quiz-card .flying-reward { inset: .05rem .5rem auto auto; }
 .quiz-card:has(.flying-reward) .quiz-count { padding-inline-end: 3rem; }
-.flying-reward-button { cursor: pointer; border-radius: 50%; background: var(--color-paper); box-shadow: 0 2px 12px #292a2d26; }
+.flying-reward-button { cursor: pointer; border-radius: 50%; background: transparent; }
 .flying-reward .brand-link { display: block; width: 2.55rem; }
 .flying-reward-burst { pointer-events: none; }
 .flying-reward-ring, .flying-reward-points { grid-area: 1 / 1; }

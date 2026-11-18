@@ -24,7 +24,6 @@ const questions = [
 
 export function QuizHub() {
   return <section className="quiz-shell">
-    <Link className="back" to="/">← Головна</Link>
     <h1>Гартуй пам’ять</h1>
     <Link className="quiz-entry" to="/quiz/avant">
       <h2>{title}</h2><span>5 запитань <span aria-hidden="true">→</span></span>

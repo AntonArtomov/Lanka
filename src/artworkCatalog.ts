@@ -6,7 +6,7 @@ export const descriptionOf: Record<string, string> = descriptions;
 const coverArtwork = {
   image: 'girl-head.jpg',
   title: 'Голова дівчинки',
-  credit: ['Касперович Микола', '1920-ті рр.', 'Школа неовізантизму', 'Національний художній музей України'],
+  credit: ['Касперович Микола', '1920-ті', 'школа неовізантизму', 'портрет'],
 };
 const artworks = [coverArtwork, ...slides.filter(slide => slide.type === 'artwork')];
 export const artworkOf = (image: string) => artworks.find(item => item.image === image);

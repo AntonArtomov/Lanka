@@ -2,11 +2,11 @@ import { useEffect, useRef, useState, type MouseEvent, type PointerEvent } from 
 import { Link } from 'react-router-dom';
 import { BrandLink } from './BrandLink';
 import { FlyingReward } from './FlyingReward';
-import { descriptionOf } from './artworkCatalog';
 import slideData from './data/avant-slides.json';
 const images = import.meta.glob<string>('./artworks/*', { eager: true, query: '?url', import: 'default' });
 type ArtworkSlide = { type: 'artwork'; title: string; image: string; credit: string[] };
-type TextSlide = { type: 'text'; title: string; paragraphs: string[] };
+type TextSlide = { type: 'text'; title: string; paragraphs: string[];
+  quote?: { text: string; author: string; authorUrl: string; source: string } };
 
 const slides = slideData as (ArtworkSlide | TextSlide)[];
 const slideCount = slides.length;
@@ -94,11 +94,16 @@ export function AvantReader({ onReward }: { onReward: () => void }) {
         <figcaption>
           <strong>{slide.title}</strong>
           {slide.credit.map(line => <span className="block" key={line}>{line}</span>)}
-          <p className="avant-artwork-description">{descriptionOf[slide.image]}</p>
         </figcaption>
       </figure> : <>
         <h2>{slide.title}</h2>
         {slide.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+        {slide.quote && <blockquote className="avant-quote reader-quote">
+          <p>{slide.quote.text}</p>
+          <footer>Автор тексту: <a href={slide.quote.authorUrl} target="_blank" rel="noreferrer">{slide.quote.author}</a>
+            <span className="block">Джерело: <cite>{slide.quote.source}</cite></span>
+          </footer>
+        </blockquote>}
       </>}
     </section>
     <nav className="avant-pagination" aria-label="Гортання слайдів">

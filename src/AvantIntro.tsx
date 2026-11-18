@@ -5,7 +5,7 @@ export function AvantIntro({ preview = false }: { preview?: boolean }) {
   return <article className="avant-intro" aria-label={preview ? 'Попередній перегляд епохи' : undefined}>
     <figure>
       <img src={portrait} width="772" height="768" alt="Портрет білявої дівчинки в рожевому одязі на червоному тлі" />
-      {!preview && <figcaption>Голова дівчинки · Микола Касперович<br />1920-ті рр. · Школа неовізантизму<br />Національний художній музей України</figcaption>}
+      {!preview && <figcaption className="avant-cover-caption"><strong>Голова дівчинки</strong><br />Касперович Микола<br />1920-ті<br />школа неовізантизму<br />портрет</figcaption>}
     </figure>
     {!preview && <h1>Ранній модернізм і український авангард</h1>}
     <blockquote className="avant-quote">

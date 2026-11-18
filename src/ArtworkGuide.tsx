@@ -87,6 +87,8 @@ function ArtworkDialogue({ image }: { image: string }) {
       <Link className="button guide-rescan" to="/scan">Сфотографувати ще</Link>
     </div>
 
+    {description && <p className="guide-artwork-description">{description}</p>}
+
     <div className="guide-chat">
       <div className="guide-modes" role="group" aria-label="Режим спілкування">
         <button type="button" aria-pressed={mode === 'text'} onClick={() => changeMode('text')}>Текст</button>

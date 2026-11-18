@@ -109,7 +109,6 @@ export function Timeline() {
       const label = <span className="journey-chain-label">
         <span className="journey-chain-status">{String(number).padStart(2, '0')} · {completed ? 'Пройдено' : active || (number === 7 && celebrating) ? 'Наступна епоха' : 'У підготовці'}</span>
         <strong>{title}</strong>
-        {active && <span className="journey-chain-action">Відкрити ланку ↗</span>}
       </span>;
       return <li key={number} ref={number === 7 ? avantRow : undefined} className={completed ? 'journey-chain-complete' : undefined}>
         {number === 1 && <CompletedChain avantCompleted={joined} />}

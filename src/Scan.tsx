@@ -54,9 +54,8 @@ export function Scan() {
   const busy = state.step === 'working';
   const loadingModel = progress !== null;
   return <section className="scan">
-    <Link className="back" to="/">← Головна</Link>
-    <h1>Впізнай картину</h1>
-    <p className="scan-lead">Сфотографуй картину в музеї і Ланка-Гід розповість тобі більше</p>
+    <h1>РОЗПІЗНАЙ АРТОБ’ЄКТ</h1>
+    <p className="scan-lead">Сфотографуй артефакт, наприклад картину в музеї - Ланка-Гід розповість тобі більше про неї</p>
 
     <div className="scan-actions">
       <label className="button scan-button" aria-disabled={busy}>

@@ -5,6 +5,7 @@ import { Timeline } from './Timeline';
 import { epochs } from './data';
 import { HeroChain } from './HeroChain';
 import { BrandLink } from './BrandLink';
+import { ArtScanIcon } from './ArtScanIcon';
 import { AvantIntro } from './AvantIntro';
 import { AvantReader } from './AvantReader';
 import { AvantQuiz, QuizHub } from './AvantQuiz';
@@ -17,7 +18,7 @@ const sections = [
   { path: '/journey', title: 'Збирай ланцюг', caption: 'Досліджуй епохи історії українського мистецтва', color: 'var(--color-gold)' },
   { path: '/artworks', title: 'Карбуй образи', caption: 'Відкривай щодня нові артефакти та шедеври', color: 'var(--color-sage)' },
   { path: '/quiz', title: 'Гартуй пам’ять', caption: 'Проходь квізи для запам’ятовування вивченого матеріалу', color: 'var(--color-clay)' },
-  { path: '/scan', title: 'Впізнай картину', caption: 'Сфотографуй твір у музеї, і Ланка розпізнає його', color: 'var(--color-brand)' },
+  { path: '/scan', title: 'Розпізнай артоб’єкт', caption: 'Сфотографуй артефакт, щоб дізнатися про нього більше.', color: 'var(--color-brand)' },
 ];
 
 function Home({ onReward }: { onReward: () => void }) {
@@ -27,7 +28,7 @@ function Home({ onReward }: { onReward: () => void }) {
     <p className="brand-intro">Відтворюй ланцюжок історії через ключові події й твори</p>
     <HeroChain onReward={onReward} />
     <ul className="brand-menu">
-      {sections.map(section => <li key={section.path}>
+      {sections.filter(section => section.path !== '/scan').map(section => <li key={section.path}>
         <Link to={section.path}>
           <BrandLink style={{ color: section.color }} />
           <span>
@@ -38,12 +39,19 @@ function Home({ onReward }: { onReward: () => void }) {
         </Link>
       </li>)}
     </ul>
+    <Link className="home-art-scan" to="/scan">
+      <ArtScanIcon />
+      <span>
+        <strong>Розпізнай артоб’єкт</strong>
+        <span className="brand-caption">Сфотографуй артефакт, щоб дізнатися про нього більше.</span>
+      </span>
+      <span className="brand-arrow" aria-hidden="true">↗</span>
+    </Link>
   </section>;
 }
 
 function SectionPreview({ section }: { section: typeof sections[number] }) {
   return <section>
-    <Link className="back" to="/">← Головна</Link>
     <h1>{section.title}</h1>
     <p className="my-4">{section.caption}</p>
     <p>Розділ у підготовці.</p>
@@ -52,7 +60,6 @@ function SectionPreview({ section }: { section: typeof sections[number] }) {
 
 function Journey() {
   return <section>
-    <Link className="back" to="/">← Головна</Link>
     <h1 className="mx-auto max-w-2xl">Збери ланки у єдиний ланцюг</h1>
     <Timeline />
   </section>;
