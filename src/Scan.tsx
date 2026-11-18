@@ -22,6 +22,12 @@ function ArtworkCard({ image }: { image: string }) {
   </article>;
 }
 
+function GuideLink({ image }: { image: string }) {
+  return <Link className="button guide-primary scan-guide-link" to={`/guide?work=${encodeURIComponent(image)}`}>
+    Розпитати Ланка-Гіда про цей твір →
+  </Link>;
+}
+
 export function Scan() {
   const [state, setState] = useState<State>({ step: 'idle' });
   const [progress, setProgress] = useState<number | null>(0);
@@ -57,6 +63,11 @@ export function Scan() {
     <Link className="back" to="/">← Головна</Link>
     <h1>Впізнай картину</h1>
     <p className="scan-lead">Сфотографуй картину в музеї і Ланка-Гід розповість тобі більше</p>
+    <ul className="scan-tips">
+      <li>Весь твір у кадрі, без обрізаних країв</li>
+      <li>Без відблисків скла й тіней від людей</li>
+      <li>Знімай рівно, спереду</li>
+    </ul>
 
     <div className="scan-actions">
       <label className="button scan-button" aria-disabled={busy}>
@@ -85,6 +96,7 @@ export function Scan() {
       <img className="scan-photo" src={state.photo} alt="Твоє фото" />
       {state.result.verdict === 'match' && <>
         <p className="scan-verdict">Це вона:</p>
+        <GuideLink image={state.result.matches[0].image} />
         <ArtworkCard image={state.result.matches[0].image} />
       </>}
       {state.result.verdict === 'maybe' && <>
@@ -98,7 +110,7 @@ export function Scan() {
             </button>
           </li>)}
         </ul>
-        {picked && <ArtworkCard image={picked} />}
+        {picked && <><GuideLink image={picked} /><ArtworkCard image={picked} /></>}
       </>}
       {state.result.verdict === 'none' && <p className="scan-verdict">
         Цієї картини немає в нашій добірці. Спробуй знімати рівніше, без відблисків і щоб твір займав увесь кадр.
@@ -108,9 +120,6 @@ export function Scan() {
     {foundImage && artworkOf(foundImage) && <div className="scan-result-actions">
       <Link className="scan-all" to={artworkEpoch.route}>
         Переглянути всі твори епохи: {artworkEpoch.title} →
-      </Link>
-      <Link className="button guide-primary" to={`/guide?work=${encodeURIComponent(foundImage)}`}>
-        Хочу дізнатись більше від Ланка-Гіду
       </Link>
     </div>}
   </section>;
