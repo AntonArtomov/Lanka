@@ -1,4 +1,10 @@
 export const heroJoinedKey = 'lanka-hero-joined';
+
+export function getCollectorStatus(linkCount: number) {
+  if (linkCount <= 3) return 'ентузіаст';
+  if (linkCount <= 20) return 'дослідник';
+  return 'куратор';
+}
 export const avantQuizCompletedKey = 'lanka-avant-quiz-completed';
 export const avantCompletionKey = 'lanka-avant-completed';
 

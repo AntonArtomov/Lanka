@@ -139,7 +139,9 @@ export function Timeline() {
           {showPreview === number && <div className="journey-preview epoch-work-preview">
             <figure>
               {preview.image && <img src={preview.image} alt={preview.caption} />}
-              <figcaption>{preview.caption}</figcaption>
+              <figcaption>{preview.caption}
+                {preview.source && <a className="epoch-preview-source" href={preview.source.url} target="_blank" rel="noreferrer">{preview.source.label} ↗</a>}
+              </figcaption>
             </figure>
           </div>}
         </div> : <div className="journey-chain-row">{ring}{label}</div>}

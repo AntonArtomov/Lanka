@@ -6,6 +6,8 @@ import { epochs } from './data';
 import { HeroChain } from './HeroChain';
 import { BrandLink } from './BrandLink';
 import { ArtScanIcon } from './ArtScanIcon';
+import { ArtworkDay } from './ArtworkDay';
+import { MyCollection } from './MyCollection';
 import { AvantIntro } from './AvantIntro';
 import { AvantReader } from './AvantReader';
 import { AvantQuiz, QuizHub } from './AvantQuiz';
@@ -13,6 +15,8 @@ import { Scan } from './Scan';
 import { ArtworkGuide } from './ArtworkGuide';
 import { clearRewards, getRewardCount } from './rewards';
 import { RewardLeaderboard } from './RewardLeaderboard';
+import { CollectorBadge } from './CollectorBadge';
+import { RankAchievement } from './RankAchievement';
 import { ProfileBadge, Welcome, readProfile, saveProfile, type DemoProfile } from './DemoProfile';
 const sections = [
   { path: '/journey', title: 'Збирай ланцюг', caption: 'Досліджуй епохи історії українського мистецтва', color: 'var(--color-gold)' },
@@ -47,14 +51,6 @@ function Home({ onReward }: { onReward: () => void }) {
       </span>
       <span className="brand-arrow" aria-hidden="true">↗</span>
     </Link>
-  </section>;
-}
-
-function SectionPreview({ section }: { section: typeof sections[number] }) {
-  return <section>
-    <h1>{section.title}</h1>
-    <p className="my-4">{section.caption}</p>
-    <p>Розділ у підготовці.</p>
   </section>;
 }
 
@@ -117,6 +113,7 @@ export function App() {
   const isHome = location.pathname === '/';
   const isAvantIntro = location.pathname === '/epoch/avant';
   const isAvantReader = location.pathname === '/epoch/avant/explore';
+  const isArtworkDay = location.pathname === '/artworks' || location.pathname === '/artworks/story';
   useEffect(() => {
     window.scrollTo(0, 0);
     document.querySelector<HTMLElement>('main')?.focus({ preventScroll: true });
@@ -142,11 +139,21 @@ export function App() {
       <div className="flex items-center gap-4">
         {profile && isAvantReader && <Link className="avant-back" to="/epoch/avant" aria-label="До вступу">←</Link>}
         {profile && isAvantIntro && <Link className="avant-back" to="/journey" aria-label="До карти епох">←</Link>}
+        {profile && isArtworkDay && <Link className="avant-back" to={location.pathname === '/artworks/story' ? '/artworks' : '/'} aria-label={location.pathname === '/artworks/story' ? 'До картини дня' : 'На головну'}>←</Link>}
         <Link className="brand-wordmark" to="/"><BrandLink />ЛАНКА</Link>
       </div>
       {profile && <div className="brand-header-actions">
-        <RewardLeaderboard nickname={profile.nickname} score={rewardCount} />
-        <ProfileBadge profile={profile} onSave={continueWith} onReset={resetDemo} />
+        <div className="header-profile">
+          <ProfileBadge profile={profile} score={rewardCount} onSave={continueWith} onReset={resetDemo} />
+          <Link className="header-collection" to="/collection" aria-current={location.pathname === '/collection' ? 'page' : undefined}>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4V3Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" /></svg>
+            Моя колекція
+          </Link>
+        </div>
+        <div className="header-achievements">
+          <CollectorBadge score={rewardCount} />
+          <RewardLeaderboard nickname={profile.nickname} score={rewardCount} />
+        </div>
       </div>}
     </header>
     <main className={!profile || isHome ? "brand-main" : isAvantReader ? "shell" : "shell py-9 sm:py-14"} tabIndex={-1}>
@@ -155,8 +162,9 @@ export function App() {
         <Routes location={location}>
           <Route path="/" element={<Home onReward={refreshRewards} />} />
           <Route path="/journey" element={<Journey />} />
-          {sections.slice(1, 2).map(section => <Route key={section.path} path={section.path}
-            element={<SectionPreview section={section} />} />)}
+          <Route path="/artworks" element={<ArtworkDay />} />
+          <Route path="/artworks/story" element={<ArtworkDay story />} />
+          <Route path="/collection" element={<MyCollection />} />
           <Route path="/quiz" element={<QuizHub />} />
           <Route path="/quiz/avant" element={<AvantQuiz onReward={refreshRewards} />} />
           <Route path="/scan" element={<Scan />} />
@@ -168,5 +176,6 @@ export function App() {
         </Routes>
       </motion.div>}
     </main>
+    <RankAchievement score={rewardCount} />
   </>;
 }

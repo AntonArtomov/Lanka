@@ -1,4 +1,6 @@
 import { useId, useRef, useState, type FormEvent } from 'react';
+import { getCollectorStatus } from './rewards';
+import { CollectorBadge } from './CollectorBadge';
 
 type Avatar = 'mona' | 'van-gogh';
 
@@ -86,7 +88,7 @@ function ProfileAvatar({ profile }: { profile: DemoProfile }) {
   </svg>;
 }
 
-export function ProfileBadge({ profile, onSave, onReset }: { profile: DemoProfile; onSave: (profile: DemoProfile) => void; onReset: () => void }) {
+export function ProfileBadge({ profile, score, onSave, onReset }: { profile: DemoProfile; score: number; onSave: (profile: DemoProfile) => void; onReset: () => void }) {
   const editor = useRef<HTMLDialogElement>(null);
   const [nickname, setNickname] = useState('');
 
@@ -104,10 +106,14 @@ export function ProfileBadge({ profile, onSave, onReset }: { profile: DemoProfil
     <button type="button" className="profile-badge" title="Редагувати профіль"
       aria-haspopup="dialog" onClick={() => { setNickname(profile.nickname); setAvatar(profile.avatar ?? 'mona'); editor.current?.showModal(); }}>
       <ProfileAvatar profile={profile} />
-      <bdi className="profile-name">{profile.nickname}</bdi>
+      <span className="profile-name">
+        <bdi className="profile-nickname">{profile.guest && profile.nickname === 'гість' ? 'Гість' : profile.nickname}</bdi>
+        <span className="profile-status">({getCollectorStatus(score)})</span>
+      </span>
     </button>
     <dialog ref={editor} className="profile-editor" aria-labelledby="profile-editor-title">
       <h2 id="profile-editor-title">Редагувати профіль</h2>
+      <div className="profile-rank-preview"><CollectorBadge score={score} /><span>{getCollectorStatus(score)}<small>{score} ланок</small></span></div>
       <form onSubmit={save}>
         <label htmlFor="profile-nickname">Нікнейм</label>
         <input id="profile-nickname" value={nickname} autoComplete="nickname" maxLength={24}

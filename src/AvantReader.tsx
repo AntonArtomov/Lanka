@@ -85,7 +85,7 @@ export function AvantReader({ onReward }: { onReward: () => void }) {
     }
   }}>
     <h1>Ранній модернізм і український авангард</h1>
-    <section key={page} className="avant-slide" aria-label={slide.title}
+    <section key={page} className={`avant-slide${slide.type === 'text' ? ' avant-text-slide' : ''}`} aria-label={slide.title}
       onClick={onContentClick} onPointerDown={onPointerDown} onPointerUp={onPointerUp}
       onPointerCancel={() => { gesture.current = null; dragged.current = true; }}>
       {page === 16 && <FlyingReward place="reader" onReward={onReward} />}
@@ -104,6 +104,15 @@ export function AvantReader({ onReward }: { onReward: () => void }) {
             <span className="block">Джерело: <cite>{slide.quote.source}</cite></span>
           </footer>
         </blockquote>}
+        <div className="reader-links-space" aria-hidden="true">
+          <div className="reader-drifting-links">
+            <span><BrandLink /></span>
+            <span><BrandLink /></span>
+            <span><BrandLink /></span>
+            <span><BrandLink /></span>
+            <span><BrandLink /></span>
+          </div>
+        </div>
       </>}
     </section>
     <nav className="avant-pagination" aria-label="Гортання слайдів">

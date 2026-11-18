@@ -1,5 +1,7 @@
 import { useRef } from 'react';
 import { BrandLink } from './BrandLink';
+import { getCollectorStatus } from './rewards';
+import { CollectorBadge } from './CollectorBadge';
 
 const artists = [
   { name: 'Катерина Білокур', score: 11 },
@@ -31,7 +33,7 @@ export function RewardLeaderboard({ nickname, score }: { nickname: string; score
       <ol>
         {rows.map(({ name, score: total, current }, index) => <li key={current ? 'visitor' : name} className={current ? 'leaderboard-current' : undefined}>
           <span aria-hidden="true">{index + 1}</span>
-          <bdi>{name}{current && ' · Ти'}</bdi>
+          <span className="leaderboard-identity"><CollectorBadge score={total} /><bdi>{name} ({getCollectorStatus(total)}){current && ' · Ти'}</bdi></span>
           <strong aria-label={`${total} ланок`}>{total}</strong>
         </li>)}
       </ol>
