@@ -122,7 +122,7 @@ export function Timeline() {
             onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}>
             {ring}{label}
           </Link>
-          {showPreview === number && <div className="journey-preview"><AvantIntro preview /></div>}
+          {showPreview === number && <div className="journey-preview epoch-work-preview"><AvantIntro preview /></div>}
         </div> : preview ? <div className="journey-preview-anchor"
           onPointerEnter={event => { if (event.pointerType === 'mouse') setShowPreview(number); }}
           onPointerLeave={event => {
