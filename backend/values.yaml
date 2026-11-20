@@ -1,0 +1,37 @@
+# Хост не вказаний навмисно: за конвенцією береться ім'я папки,
+# тобто lanka-api.nickromant.com. Тег підставить CI (build.yml) після
+# першої збірки — до того образу ще нема.
+image:
+  repository: ghcr.io/nickromant/lanka-api
+  tag: sha-46769a0fe427f6e3387adea305c757c4472ee7fe
+
+service:
+  port: 80
+  targetPort: 8080
+
+probes:
+  readiness: /health
+  liveness: /health
+
+replicas:
+  min: 1
+
+autoscaling:
+  enabled: false
+
+ingress:
+  enabled: true
+  path: /
+
+resources:
+  requests: { cpu: 10m, memory: 32Mi }
+  limits:   { cpu: 200m, memory: 96Mi }
+
+# Секрет lanka-gemini створюється вручну в namespace public:
+#   kubectl -n public create secret generic lanka-gemini --from-literal=GEMINI_API_KEY=...
+# optional: без секрета под усе одно стартує, /guide відповідає 503, а
+# фронтенд переходить на запасні відповіді.
+env:
+  - name: GEMINI_API_KEY
+    valueFrom:
+      secretKeyRef: { name: lanka-gemini, key: GEMINI_API_KEY, optional: true }
